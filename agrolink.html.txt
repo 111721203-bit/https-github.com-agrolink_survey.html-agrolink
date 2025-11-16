@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ڕاپرسی ئەگرۆلینک - کەلار</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+body {
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.rtl {
+direction: rtl;
+}
+</style>
+</head>
+<body class="bg-gradient-to-br from-green-50 via-emerald-50 to-blue-50 min-h-screen p-4">
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState } = React;
+
+function AgroLinkSurvey() {
+const [responses, setResponses] = useState({});
+
+const questions = [
+{
+id: 1,
+category: "زانیاری گشتی",
+question: "چەند دۆنم زەوی دەکێڵیت؟",
+type: "choice",
+options: ["کەمتر لە ١٠ دۆنم", "١٠-٤٠ دۆنم", "٤٠-١٠٠ دۆنم", "١٠٠-٢٥٠ دۆنم", "زیاتر لە ٢٥٠ دۆنم"]
+},
+{
+id: 2,
+category: "زانیاری گشتی",
+question: "چ جۆرە بەرهەمێک دەکێڵیت لە کەلار؟",
+type: "text",
+placeholder: "نموونە: تەماتە، خیار، باجان، میوە، گەنم..."
+},
+{
+id: 3,
+category: "کێشەکانی ئێستا",
+question: "گەورەترین کێشەت چییە لە کشتوکاڵیدا؟",
+type: "choice",
+options: [
+"نەبوونی ڕاوێژکاری پسپۆڕانە",
+"نەخۆشی و ئافاتی بەرهەم",
+"دۆزینەوەی کەرەستە و پەیین",
+"نرخی نزمی بازاڕ بۆ بەرهەم",
+"کەمی ئاو",
+"نەزانینی کاتی گونجاوی کێڵان"
+]
+},
+{
+id: 4,
+category: "کێشەکانی ئێستا",
+question: "لە ئێستادا کە کێشەت هەیە چۆن دەیچارەسەریت؟",
+type: "choice",
+options: [
+"دەچمە دەزگای کشتوکاڵی",
+"پرسیار لە جوتیارانی تر دەکەم",
+"لە یوتیوب و ئینتەرنێت دەگەڕێم",
+"خۆم تاقی دەکەمەوە",
+"هیچ ڕاوێژەیەک وەرناگرم"
+]
+},
+{
+id: 5,
+category: "تەکنەلۆژیا",
+question: "چەندە مۆبایل بەکاردێنیت بۆ کاری کشتوکاڵی؟",
+type: "choice",
+options: [
+"ڕۆژانە زیاتر لە ١ کاتژمێر",
+"ڕۆژانە کەمتر لە ١ کاتژمێر",
+"هەفتانە چەند جار",
+"بەدەگمەن"
+]
+},
+{
+id: 6,
+category: "تەکنەلۆژیا",
+question: "ئایا پێشتر هیچ ئەپێکی کشتوکاڵی بەکارهێناوە؟",
+type: "choice",
+options: ["بەڵێ", "نەخێر"]
+},
+{
+id: 7,
+category: "تەکنەلۆژیا",
+question: "ئەگەر وەڵامی پرسیاری ٦ بەڵێ بوو، چ ئەپێک بوو؟",
+type: "text",
+placeholder: "ناوی ئەپەکە بنووسە"
+},
+{
+id: 8,
+category: "پێویستی بە ڕاوێژە",
+question: "ئایا پێویستت بە پەیوەندی راستەوخۆ بە پسپۆڕی کشتوکاڵی هەیە؟",
+type: "scale",
+scale: 5,
+labels: ["هیچ پێویستیم نییە", "زۆر پێویستمە"]
+},
+{
+id: 9,
+category: "پێویستی بە ڕاوێژە",
+question: "چ جۆرە یارمەتییەکت لە پسپۆڕێک پێویستە؟",
+type: "choice",
+options: [
+"دەستکاری نەخۆشی و ئافات",
+"ڕێنمایی دەربارەی کێش و پەیین",
+"کاتی باشترین کێڵان و دروێنە",
+"چۆنیەتی باشترکردنی بەرهەم",
+"هەموو ئەم شتانە"
+]
+},
+{
+id: 10,
+category: "پێویستی بە ڕاوێژە",
+question: "چەند جار لە وەرزێکدا پێویستت بە ڕاوێژەی پسپۆڕ دەبێت؟",
+type: "choice",
+options: [
+"هەفتانە چەند جار",
+"مانگێک جارێک",
+"وەرزێک ٢-٣ جار",
+"تەنها کاتێک کێشەی گەورە هەبێت"
+]
+},
+{
+id: 11,
+category: "بازاڕ و کڕین",
+question: "ئایا کێشەت هەیە لە دۆزینەوەی کەرەستەی کوالیتی لە کەلار؟",
+type: "scale",
+scale: 5,
+labels: ["کێشەم نییە", "کێشەی زۆرم هەیە"]
+},
+{
+id: 12,
+category: "بازاڕ و کڕین",
+question: "ئایا دوکانێکی ئۆنلاین بۆ کڕینی کەرەستە یارمەتیدەرە؟",
+type: "choice",
+options: ["بەڵێ، زۆر باشە", "ڕەنگە یارمەتیدەر بێت", "نەخێر", "دڵنیا نیم"]
+},
+{
+id: 13,
+category: "بازاڕ و کڕین",
+question: "ئایا نرخی میوە و سەوزە لە بازاڕی کەلار دەزانیت؟",
+type: "choice",
+options: ["بەڵێ، هەمیشە شارەزام", "هەندێک جار", "نەخێر، ناڕۆمە بازاڕ", "لە کۆسەکان پرسیار دەکەم"]
+},
+{
+id: 14,
+category: "بازاڕ و کڕین",
+question: "ئەگەر بتوانیت نرخی بازاڕ بە ڕاستەوخۆ لە مۆبایلەوە ببینیت، یارمەتیدەرە؟",
+type: "scale",
+scale: 5,
+labels: ["یارمەتیدەر نییە", "زۆر یارمەتیدەرە"]
+},
+{
+id: 15,
+category: "پارەدان",
+question: "ئایا ئامادەیت پارە بدەیت بۆ وەرگرتنی ڕاوێژە لە پسپۆڕێک بە ئۆنلاین؟",
+type: "choice",
+options: ["بەڵێ", "بەستراوە بە نرخەکەی", "نەخێر", "دڵنیا نیم"]
+},
+{
+id: 16,
+category: "پارەدان",
+question: "چەندت دەدا بۆ یەک جار ڕاوێژە لەگەڵ پسپۆڕ؟ (بە هەزار دینار)",
+type: "choice",
+options: [
+"٥-١٠ هەزار دینار",
+"١٠-٢٠ هەزار دینار",
+"٢٠-٣٥ هەزار دینار",
+"٣٥-٥٠ هەزار دینار",
+"زیاتر لە ٥٠ هەزار",
+"هیچ نادەم"
+]
+},
+{
+id: 17,
+category: "زیرەکی دەستکرد (AI)",
+question: "ئایا حەزدەکەیت لە جێگای پسپۆڕ، چاتی زیرەکی دەستکرد (AI) بەکاربێنیت بۆ وەڵامی خێرا؟",
+type: "choice",
+options: ["بەڵێ، ئەوە باشترە", "هەردووکیان پێم خۆشە", "نەخێر، تەنها پسپۆڕی ڕاستەقینە دەمەوێت", "نازانم AI چییە"]
+},
+{
+id: 18,
+category: "زیرەکی دەستکرد (AI)",
+question: "ئەگەر AI چات ماوەیەک بەخۆڕایی بێت، دواتر مانگانە ١٥-٢٠ هەزار بێت، باشە؟",
+type: "choice",
+options: ["بەڵێ، نرخێکی گونجاوە", "زۆر گرانە", "باشە ئەگەر کوالیتی باش بێت", "حەز دەکەم بەخۆڕایی بمێنێتەوە"]
+},
+{
+id: 19,
+category: "هەڵسەنگاندن",
+question: "لە ١ بۆ ١٠، چەندە ئەگەری هەیە ئەپی ئەگرۆلینک بەکاربێنیت؟",
+type: "scale",
+scale: 10,
+labels: ["هەرگیز", "بە دڵنیاییەوە"]
+},
+{
+id: 20,
+category: "پێشنیار",
+question: "هەر بۆچوون یان پێشنیارێکت هەیە بۆ باشترکردنی ئەگرۆلینک؟",
+type: "text",
+placeholder: "بۆچوونی خۆت بنووسە یان چی بڵێیت زیاتر پێویستە..."
+}
+];
+
+const handleResponse = (questionId, value) => {
+setResponses(prev => ({
+...prev,
+[questionId]: value
+}));
+};
+
+const exportToCSV = () => {
+try {
+const BOM = '\uFEFF';
+let csv = BOM + 'ژمارە,پۆل,پرسیار,وەڵام\n';
+
+questions.forEach(q => {
+const answer = responses[q.id] || 'وەڵام نەدراوەتەوە';
+const question = q.question.replace(/"/g, '""');
+const category = q.category.replace(/"/g, '""');
+const reply = String(answer).replace(/"/g, '""');
+csv += `${q.id},"${category}","${question}","${reply}"\n`;
+});
+
+const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+const link = document.createElement('a');
+link.href = URL.createObjectURL(blob);
+link.download = `agrolink_kalar_${Date.now()}.csv`;
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+
+alert('✅ فایلەکە داگیرا!\nئێستا دەتوانیت لە Excel بیکەیتەوە');
+} catch (error) {
+alert('❌ هەڵە! تکایە دووبارە هەوڵ بدەرەوە');
+}
+};
+
+const renderQuestion = (q) => {
+switch(q.type) {
+case 'choice':
+return (
+<div className="space-y-2">
+{q.options.map((option, idx) => (
+<label key={idx} className="flex items-center gap-3 p-3 rounded-lg hover:bg-green-50 cursor-pointer border-2 border-transparent hover:border-green-200 transition-all">
+<input
+type="radio"
+name={`q${q.id}`}
+value={option}
+checked={responses[q.id] === option}
+onChange={(e) => handleResponse(q.id, e.target.value)}
+className="w-5 h-5 text-green-600 cursor-pointer"
+/>
+<span className="text-gray-700">{option}</span>
+</label>
+))}
+</div>
+);
+
+case 'scale':
+return (
+<div className="space-y-4">
+<div className="flex justify-between items-center gap-2">
+{[...Array(q.scale)].map((_, idx) => (
+<button
+key={idx}
+onClick={() => handleResponse(q.id, idx + 1)}
+className={`w-12 h-12 rounded-full border-2 font-bold transition-all ${
+responses[q.id] === idx + 1
+? 'bg-green-600 text-white border-green-600 scale-110 shadow-lg'
+: 'bg-white text-gray-600 border-gray-300 hover:border-green-400 hover:scale-105'
+}`}
+>
+{idx + 1}
+</button>
+))}
+</div>
+<div className="flex justify-between text-sm text-gray-600 px-2">
+<span className="text-right">← {q.labels[0]}</span>
+<span className="text-left">{q.labels[1]} →</span>
+</div>
+</div>
+);
+
+case 'text':
+return (
+<textarea
+value={responses[q.id] || ''}
+onChange={(e) => handleResponse(q.id, e.target.value)}
+placeholder={q.placeholder}
+className="w-full p-4 border-2 border-gray-300 rounded-lg focus:border-green-500 focus:outline-none min-h-28 text-gray-700"
+rows={4}
+/>
+);
+
+default:
+return null;
+}
+};
+
+const answeredCount = Object.keys(responses).length;
+const progress = (answeredCount / questions.length) * 100;
+
+return (
+<div className="max-w-4xl mx-auto py-8">
+<div className="bg-white rounded-2xl shadow-xl p-8 mb-6 border-t-4 border-green-600">
+<div className="flex items-center justify-between mb-6 flex-wrap gap-4">
+<div>
+<h1 className="text-4xl font-bold text-green-700 mb-2">
+🌾 ڕاپرسی ئەگرۆلینک
+</h1>
+<p className="text-gray-600 text-lg">
+تایبەت بە جوتیارانی شاری کەلار
+</p>
+<p className="text-sm text-gray-500 mt-1">
+یارمەتیمان بدە بۆ باشترکردنی خزمەتگوزارییەکانمان
+</p>
+</div>
+<button
+onClick={exportToCSV}
+disabled={answeredCount === 0}
+className={`flex items-center gap-2 px-6 py-3 rounded-lg transition-all shadow-lg ${
+answeredCount === 0
+? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+: 'bg-green-600 text-white hover:bg-green-700 hover:shadow-xl active:scale-95'
+}`}
+>
+<span className="font-semibold">⬇ داگرتن</span>
+</button>
+</div>
+
+<div className="space-y-2">
+<div className="flex justify-between text-sm font-medium text-gray-700">
+<span>وەڵامدانەوە: {answeredCount} لە {questions.length}</span>
+<span className="text-green-600">{Math.round(progress)}%</span>
+</div>
+<div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+<div
+className="bg-gradient-to-r from-green-500 to-emerald-600 h-4 rounded-full transition-all duration-500"
+style={{ width: `${progress}%` }}
+/>
+</div>
+</div>
+</div>
+
+<div className="space-y-5">
+{questions.map((q) => (
+<div
+key={q.id}
+className={`bg-white rounded-xl shadow-md p-6 transition-all duration-300 ${
+responses[q.id] ? 'ring-2 ring-green-400 shadow-lg' : 'hover:shadow-lg'
+}`}
+>
+<div className="mb-5">
+<div className="flex items-start gap-3 mb-3">
+<span className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg ${
+responses[q.id]
+? 'bg-green-600 text-white'
+: 'bg-gray-200 text-gray-600'
+}`}>
+{q.id}
+</span>
+<div className="flex-1">
+<span className="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full mb-2">
+{q.category}
+</span>
+<h3 className="text-lg font-semibold text-gray-800 leading-relaxed">
+{q.question}
+</h3>
+</div>
+</div>
+</div>
+
+{renderQuestion(q)}
+</div>
+))}
+</div>
+
+<div className="bg-gradient-to-r from-green-600 to-emerald-600 rounded-2xl shadow-xl p-8 mt-8 text-white">
+<div className="text-center mb-6">
+<h3 className="text-2xl font-bold mb-2">سوپاس بۆ کاتەکەت! 🙏</h3>
+<p className="text-green-50">
+یارمەتیت گرنگە بۆ گەشەکردنی ئەگرۆلینک
+</p>
+</div>
+
+<div className="flex justify-center gap-8 flex-wrap">
+<div className="text-center bg-white/10 rounded-lg px-6 py-4">
+<div className="text-3xl font-bold">{answeredCount}</div>
+<div className="text-sm text-green-50">وەڵام دراوەتەوە</div>
+</div>
+<div className="text-center bg-white/10 rounded-lg px-6 py-4">
+<div className="text-3xl font-bold">{questions.length - answeredCount}</div>
+<div className="text-sm text-green-50">ماوە</div>
+</div>
+</div>
+
+{answeredCount === questions.length && (
+<div className="mt-6 text-center">
+<p className="text-lg font-semibold text-yellow-300">
+✨ تەواوت کرد! کلیک لە "داگرتن" بکە ✨
+</p>
+</div>
+)}
+</div>
+</div>
+);
+}
+
+ReactDOM.render(<AgroLinkSurvey />, document.getElementById('root'));
+</script>
+
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</body>
+</html>
